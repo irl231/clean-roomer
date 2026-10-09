@@ -16,6 +16,8 @@ are yours. The author does not authorise that use.
 
 The guide is provided as is, with no warranty. To the maximum extent the law allows, the author is not liable for claims that result from your use, including licence disputes and claims by a vendor. This is not legal advice.
 
+This disclaimer, and any claim against the author that arises from the guide or its use, are governed by Swiss law (excluding its conflict-of-law rules and the CISG). The exclusive place of jurisdiction is Lucerne, Switzerland, to the extent the law allows. Mandatory consumer protection in the user's country is not affected, and the GPL-2.0 licence of the files is unchanged.
+
 ## What you get
 
 | Path | Purpose |
