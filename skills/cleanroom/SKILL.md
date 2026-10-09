@@ -1,6 +1,6 @@
 ---
 name: cleanroom
-description: Guides an owner through a clean-room re-implementation of an existing application and runs the whole process: intake, legal posture, project setup, source gathering, planning, a rule-checked build loop and release preparation. Generates project-specific skills and files. Use when the user wants to rebuild, re-create, clone or replace an existing application without copying it, mentions clean room, clean-room, reimplementation, or asks how to avoid copying a vendor's code or assets. Does not start from a named target alone. Shows DISCLAIMER.md, quotes the licence, and waits for the owner's recorded choice.
+description: Guides an owner through a clean-room re-implementation of an existing application and runs the whole process&#58; intake, legal posture, project setup, source gathering, planning, and rule-checking.
 ---
 
 # Clean-room process guide
