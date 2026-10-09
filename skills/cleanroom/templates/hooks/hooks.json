@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "command": "<<python>> .cursor/hooks/do_not_read_guard.py",
+        "matcher": "Read|WebFetch|WebSearch|Glob",
+        "failClosed": true,
+        "timeout": 10
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "<<python>> .cursor/hooks/do_not_read_guard.py",
+        "failClosed": true,
+        "timeout": 10
+      }
+    ],
+    "beforeMCPExecution": [
+      {
+        "command": "<<python>> .cursor/hooks/do_not_read_guard.py",
+        "failClosed": true,
+        "timeout": 10
+      }
+    ]
+  }
+}

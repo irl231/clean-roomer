@@ -1,0 +1,35 @@
+# cleanroom/deny-list.txt: input for scripts/cleanroom_scan.ps1 / cleanroom_scan.py (or the project's own scan).
+# Generated in phase 2 from the profile (sections 1, 2, 4 and 6). Never edit it to make a check pass.
+#
+# kinds: term, notice, meta, ext, path, allow   (see the header of either scanner)
+# allow exempts TEXT files from term / notice / meta only; binaries, ext and path are never exempt.
+
+# --- Target and vendor names: only the profile, STATE, ADRs and AGENTS.md may say them ---
+# One term per distinct spelling (product name, vendor name, common abbreviation).
+# term: <<target name>>
+# term: <<vendor name>>
+
+# --- Vendor notice lines, trademark lines, internal product code names ---
+# notice: <<vendor copyright line>>
+# term: <<vendor internal code name>>
+
+# --- Names of copyleft or competitor projects the agent must not read, port or quote ---
+# term: <<name of an open-source clone of the target>>
+
+# --- Producer / creator-tool strings that betray files made by vendor software ---
+# meta: <<producer string as it appears in file metadata>>
+
+# --- File extensions of vendor presets, profiles, templates, libraries ---
+# ext: .<<ext>>
+
+# --- Paths that must never be tracked (observation folder from profile section 2, oracle output) ---
+path: <<observation folder>>/**
+path: <<oracle output folder>>/**
+path: **/screenshots/**
+path: **/observations/**
+
+# --- Text files exempt from term / notice / meta (they must name the vendor to do their job) ---
+allow: cleanroom/**
+allow: AGENTS.md
+allow: docs/adr/**
+# Not allowed on purpose: .cursor/skills/**, src/**, README.md and everything shipped.
