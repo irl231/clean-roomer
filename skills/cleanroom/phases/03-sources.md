@@ -14,10 +14,15 @@
    Material the owner declared S2 in the category readings (profile section 1, R15.3) is listed
    with its path and nothing else inside the install is opened. At P1 this is the only behaviour
    source besides S1.
-3. **Feature catalogue.** Build the parity tracker (`T8` in `templates/DOCUMENT-TEMPLATES.md`): one row
-   per feature, **by feature or menu name only** (R6.3). At P1, take the names from public
-   documentation. At P2 or P3, names may also be listed from observation of menus and panels
-   (R5.7) using `<project>-observe`. Group by area and give each row an id.
+3. **Feature catalogue.** Copy `templates/parity/features.template.tsv` to
+   `cleanroom/parity/features.tsv` and fill it (`T8` in `templates/DOCUMENT-TEMPLATES.md`): one row
+   per feature the target has, **by feature or menu name only** (R6.3), grouped by area, each with
+   a stable id. Aim for the whole surface (every menu item, tool, panel, file format, setting), not
+   only what will be built: the catalogue is the denominator of every parity number. At P1, take the
+   names from public documentation. At P2 or P3, names may also be listed from observation of menus
+   and panels (R5.7) using `<project>-observe`. Then run
+   `python3 cleanroom/scripts/parity_report.py` and commit the generated `parity.md` and
+   `scorecard.md`: everything is "missing", which is the honest baseline.
 4. **Behaviour reference.** Create the skeleton (`T7`) for areas where behaviour is not fully given by a
    spec. Do not fill it with copied text.
 5. **Do-not-read list and oracles.** Name the copyleft and competitor implementations for each area
@@ -29,8 +34,8 @@
    by commit and SHA-256), no vendor-made files at P1 and P2, vendor-authored generated fixtures only
    at P3 under R9.4. Record in the profile section 7.
 7. **Out of scope.** Features that cannot be done within the posture: no public spec, scripting
-   bytecode, cloud services, vendor presets and data, models we may not ship (R12.4). Each gets a
-   line in the tracker with status "out of scope" and an ADR if the owner wants it recorded. Put
+   bytecode, cloud services, vendor presets and data, models we may not ship (R12.4). Each keeps its
+   catalogue row with scope `out:<ADR or roadmap reference>`. Put
    questions that need the owner (for example: may a whole undocumented format be studied from public
    sample files, R3.8) into STATE.md "Open owner decisions".
 8. **Update the profile** sections 3, 4, 5, 7, 9 and regenerate the project section of `AGENTS.md`.

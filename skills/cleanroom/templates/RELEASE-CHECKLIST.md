@@ -27,11 +27,19 @@ owner's actions or explicit decisions.** The agent prepares and verifies; it doe
 
 ## C. Honest status
 
-- [ ] Roadmap "Where we stand" updated; numbers say measured or estimated (R10.4).
+- [ ] Parity reports regenerated on the release commit; `parity_report.py --check` passes with the
+      pinned corpora and oracles present; floors hold (R10.7, R10.8, R11.6).
+- [ ] Roadmap "Where we stand" (T9) quotes that scorecard; estimates are labelled (R10.4).
 - [ ] Release notes list known limitations next to features.
-- [ ] No claim of "parity" or "compatibility" without evidence a reviewer can rerun.
+- [ ] Every parity or compatibility figure in public text names its dimension (wired, live, real
+      inputs) and can be rerun by a reviewer. "Validated by users" is labelled as an estimate.
 
-## D. Naming and legal (owner decisions)
+## D. Automation
+
+- [ ] Agent control channel ships loopback or stdio only, with a token and file roots (R13.8).
+- [ ] The target bridge, if any, is not in any package, installer or dependency (R5.12).
+
+## E. Naming and legal (owner decisions)
 
 - [ ] Product name contains no vendor or product mark.
 - [ ] Wording that mentions the target (README, store pages, marketing) reviewed by the owner or counsel;
@@ -39,7 +47,7 @@ owner's actions or explicit decisions.** The agent prepares and verifies; it doe
 - [ ] Licence of our code stated; contributor licence statement in place.
 - [ ] Vendor's terms re-read for the final posture decision; ADR still valid.
 
-## E. Build and packaging
+## F. Build and packaging
 
 - [ ] Gate green on the release commit from a clean checkout.
 - [ ] Reproducible build instructions verified by building in a fresh directory.
@@ -47,7 +55,7 @@ owner's actions or explicit decisions.** The agent prepares and verifies; it doe
 - [ ] Version, changelog, tag prepared (not pushed unless the owner says so).
 - [ ] Signing, notarisation, store submission, publication: **owner action**. Record who and when.
 
-## F. Handover
+## G. Handover
 
 - [ ] `cleanroom/STATE.md` final; session log written.
 - [ ] Local observation folder archived or destroyed per the owner's wish (never shared, never committed).

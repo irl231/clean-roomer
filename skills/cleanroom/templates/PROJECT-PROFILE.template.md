@@ -42,6 +42,7 @@ left blank means the **strictest** reading applies.
 | If P2/P3: how the target window is captured (R5.3) | e.g. by window id with OS tool |
 | If P3: corpus repository and generator folder | |
 | ADR recording this decision | |
+| If P2/P3: target bridge (R5.11 to R5.13) | none / ADR link, attachment method, bridge folder, scratch folder, server and tool names listed in `cleanroom/do-not-read.txt`, implementers may call it: no / yes |
 
 ## 3. Allowed behaviour sources
 
@@ -101,7 +102,8 @@ thing (R7.3), e.g. reference decoders:
 | Clean-room check (vendor notices / vendor-made fixtures) | | |
 | Dependency licence check | | |
 | Corpus hash check | | |
-| Parity/claims check | | |
+| Parity check (C6): `parity_report.py --check --commands <mode>` after the tests | | |
+| Command coverage (C8), if the agent-control ADR chose a registry | | |
 | Gitignore guard for observation folder | | |
 | Do-not-read guard (agent hook, G1) | `.cursor/hooks.json` + `cleanroom/do-not-read.txt`, or "not available: prose-only" | hook |
 | Scanner in use (`cleanroom_scan.ps1` / `cleanroom_scan.py` / own) and self-test command | | |
@@ -120,3 +122,26 @@ Who to ask, and how, for the topics in CLEANROOM-RULES §12.3:
 - Posture / exceptions:
 - Publishing / remotes / secrets:
 - History purge after a violation:
+
+## 11. Agent-control interface of our product (R13.6 to R13.8, decided in phase 4)
+
+| Field | Value |
+|---|---|
+| ADR (template T10) | |
+| Interface | registry + CLI + agent server / registry + CLI / category interface / none: reason |
+| Registry location | |
+| CLI and agent server commands | |
+| Capture command (our app only, offscreen preferred) | |
+| Per-agent port / build dir / scratch scheme | |
+| Token and file roots | |
+| Parity report `--commands` mode | required / optional / none |
+
+## 12. Parity record (R10.7, R10.8)
+
+| Field | Value |
+|---|---|
+| Catalogue | `cleanroom/parity/features.tsv` |
+| Evidence folder (ignored build output) | `cleanroom/parity/evidence/` |
+| Floors | `cleanroom/parity/floors.tsv` |
+| Generated reports (committed) | `cleanroom/parity/parity.md`, `cleanroom/parity/scorecard.md` |
+| Extra measured scorecard sources, if any | (e.g. settings no code reads, performance budgets) |

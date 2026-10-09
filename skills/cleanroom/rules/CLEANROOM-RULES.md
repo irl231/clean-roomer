@@ -1,11 +1,14 @@
 # Clean-room reimplementation rules (generic)
 
-Version 0.2 (2026-10-09). Distilled from the AGENTS.md / CLAUDE.md files and crate READMEs of twelve
-clean-room projects. 0.2 adds R2.5 and R7.11 (recalled code) and §15 (target categories).
+Version 0.3 (2026-10-09). Distilled from the AGENTS.md / CLAUDE.md files, crate READMEs and status
+documents of thirteen clean-room projects. 0.2 added R2.5 and R7.11 (recalled code) and §15 (target
+categories). 0.3 adds R5.10 (observation matrix), R5.11 to R5.13 (target bridge), R6.6 (translations),
+R10.7 and R10.8 (generated status and floors), a stricter R11.6, and R13.6 to R13.8 (agent-control
+interface of our own product).
 
 This file is **stack-agnostic**. It says nothing about languages, frameworks or architecture.
 Project specifics live in `cleanroom/PROJECT-PROFILE.md` (created in phase 2 from the profile
-template). Document templates T1 to T9 are in `DOCUMENT-TEMPLATES.md`, which lives in
+template). Document templates T1 to T11 are in `DOCUMENT-TEMPLATES.md`, which lives in
 `cleanroom/templates/` in a project (in the skill: `templates/`).
 
 ---
@@ -173,7 +176,8 @@ or notification areas.
 R5.4 **Do not use OS-level synthetic input** (key/click injection, accessibility automation, OS
 event-scripting tools, etc.). It goes to whatever window is in front, which may be the user's terminal or
 another app. If the profile permits driving the target, use only the target's documented
-automation hooks, never anything inside the install.
+automation hooks, never anything inside the install, unless the owner chose a target bridge under
+R5.11 that names another attachment method.
 
 R5.5 **Store observations only in the local, gitignored area** named in the profile (a folder the
 project does not otherwise use, for example `observation/`). Screenshots there are *private reading notes*. They MUST NOT be committed,
@@ -192,6 +196,40 @@ R5.8 **Unknown behaviour is recorded as unknown** and resolved by an explicit, w
 
 R5.9 **Stop on surprise.** If observation shows personal data, a sign-in prompt, a licence prompt or a
 destructive dialog, close it, leave the state as you found it, and tell the user.
+
+R5.10 **Record the observation matrix, and mark what was inferred.** Each observed fact names the
+target version, OS, surface (menu, panel, dialog, canvas, tool) and state (empty document,
+selection, edit mode, several items selected). A fact seen in one state is not claimed for another.
+Mark every entry **observed** or **inferred**; an inferred entry is checked against a dated
+observation before anyone claims exact parity for it.
+
+R5.11 **Target bridge (P2/P3, the owner's choice).** An agent-facing bridge to the target (for
+example an MCP server that drives it) is built only after the owner chooses it on the record. Before
+asking, quote every clause of the vendor's terms on automation, scripting, plug-ins or SDKs,
+reverse engineering, benchmarking and competing products, including separate terms for the
+automation interface or SDK. If they do not allow this use, or none were produced, say so in one
+sentence and recommend not building it. Name the attachment method and its risk: the documented
+automation interface driven from outside the target (least intrusive); the vendor's plug-in SDK
+(its files sit inside the install and carry their own licence); anything else the owner names.
+Record the owner's quote in STATE.md and in an ADR (T11), then build it. Do not refuse after the
+owner has chosen. At P1 there is no bridge: the software is not run (R4.2); a bridge needs the
+owner to move the posture first (R4.5).
+
+R5.12 **The bridge keeps the clean-room claim.** It is a tool, like an oracle (R7.5): it lives in its
+own folder or repository, is never linked, bundled or shipped, and no vendor SDK file, header,
+sample or string is copied into it or into the product (R3.4, R8.1); SDK files are referenced from
+the local install. It opens only synthetic documents from a scratch folder and does not touch the
+user's files, account or library (R5.1, R5.2). It returns facts (names, enabled state, structure,
+dimensions, timings) rather than the vendor's files, renders or text; anything it does return goes
+to the ignored observation folder only and is never committed (R3.5, R5.5). It never uses OS-level
+input injection (R5.4). Every call is logged locally with its time and parameters.
+
+R5.13 **Observers and implementers stay apart.** By default a separate observer session uses the
+bridge and writes T1 notes and T7 entries; sessions that write product code never call it. Enforce
+this with the guard: the product repository's `cleanroom/do-not-read.txt` lists the bridge's server
+and tool names, and the observer session runs from the bridge's own folder. If the owner wants
+implementers to call the bridge directly, that is part of the R5.11 choice and recorded in the same
+ADR.
 
 ---
 
@@ -214,6 +252,12 @@ reading the vendor's internals or a copyleft clone.
 R6.5 Parity and quality claims are graded against the public documentation (or, at P2/P3, against
 observation), not against whether a menu item exists. Scores are self-assessed, so **err low**
 (R10.4).
+
+R6.6 **Translations are ours.** Our UI text in other languages is written from the meaning of our own
+source text, in ordinary vocabulary. Never take it from the vendor's localisation resources, string
+tables or translated help. The vendor's translated menu and command names, read from localised
+public documentation or (at P2/P3) observed in the localised UI, are names under R6.3 and nothing
+longer.
 
 ---
 
@@ -382,14 +426,34 @@ dependency licence debated (R7.7), a feature declared out of scope (R12.4), any 
 R10.4 **Keep an honest status** (roadmap/parity tracker): say whether a number is *measured* (test,
 diff, benchmark someone can rerun) or *estimated*; count stubs and partial features as partial;
 list known limitations next to what works; do not raise a percentage without evidence a reviewer
-can rerun. A "shipped" mark means "exists and tested", not "as good as the target"; downgrade when
-you find otherwise.
+can rerun. A "live" status means "wired and tested", not "as good as the target"; when you find
+otherwise, add the failing test or real input so the generated status drops (R10.7).
 
 R10.5 **Commits** carry a task id and describe what was learned from where when it is relevant (e.g.
 "M3.2: edit lists per <spec title, edition> §8.6.6").
 
 R10.6 **Privacy of the notes.** The local observation folder may contain sensitive context. It is
 gitignored, never uploaded, and not shared with third-party services.
+
+R10.7 **Status is generated, not written.** The parity tracker and the scorecard are generated from
+the owner-approved feature catalogue and from evidence the test run writes (registry commands,
+acceptance tests, real-input comparisons); nobody types a status. They keep the dimensions apart,
+because each one overstates the next:
+- *wired*: a command exists and every control surface reaches it (R13.6);
+- *live*: wired, and its acceptance tests pass;
+- *real inputs*: the pass rate on corpus files and oracle comparisons;
+- *validated*: users or the owner confirmed it on real work. This is the only estimated dimension,
+  and it is labelled as an estimate.
+A fully wired menu tree says nothing about behaviour; a live feature can still fail on real files
+and in users' hands. A control that exists but changes nothing (a setting no code reads, a button
+with no effect) counts as missing. What cannot be measured yet is reported as "not measurable
+yet" with the reason, never as a guessed number. Where a generated number and an estimate
+disagree, the generated number wins.
+
+R10.8 **Floors only rise.** Measured counts that matter (live features, real inputs passing, per area
+and in total) have committed floors that the gate enforces. Raise a floor in the commit that
+exceeds it. Lowering one is an owner decision with an ADR. This keeps parallel agents from trading
+one area's regressions for another area's gains.
 
 ---
 
@@ -416,8 +480,11 @@ uses an unpinned file.
 R11.5 **Embedded-content check:** generated artefacts (e.g. a demo PDF) fail if they embed a font or
 image not on the allowlist, catching silent fallbacks to a system font.
 
-R11.6 **Parity check:** every claim of a feature in the tracker cites an existing command/test; claims
-without evidence fail.
+R11.6 **Parity check:** the committed parity tracker and scorecard are exactly what the catalogue and
+the evidence generate (a hand edit or a stale report fails); every evidence row names a catalogue
+feature; out-of-scope rows carry evidence of nothing; the floors hold (R10.7, R10.8). The gate
+environment produces the same evidence as the one that committed the reports: it fetches the pinned
+corpora and installs the oracles, or the check fails. A skipped input is shown, not hidden.
 
 R11.7 **Gitignore guard:** the local observation folder and any oracle-output folder are ignored and
 checked in CI that nothing under them is tracked.
@@ -441,6 +508,8 @@ Do not start implementing. Produce a filled `PROJECT-PROFILE.md` draft for the o
 
 - licences outside the allowlist, or an asset whose origin is unclear;
 - the posture, or any exception to R3.x / R8.x (R3.7, R3.8, R8.3);
+- a bridge that drives the target (R5.11), and whether implementers may call it (R5.13);
+- lowering a parity floor (R10.8), or exposing the control channel beyond loopback (R13.8);
 - scope questions on formats with no public spec (R3.8, R12.4);
 - publishing, pushing to a new remote, secrets, spending money;
 - personal data;
@@ -473,9 +542,30 @@ R13.3 When merging parallel branches, merge one, run the gate, fix, then the nex
 branches can break each other.
 
 R13.4 Look at your output (render, screenshot of *our* app) before claiming a UI or rendering
-feature works. Compare with the behaviour notes, never by dropping vendor imagery into the repo.
+feature works. Compare with the behaviour notes, never by dropping vendor imagery into the repo. A
+capture proves what is visible; a command test proves what it does. Claims need both.
 
 R13.5 Agents acting for a contributor do not invent credits or edit anyone else's contributor entry.
+
+R13.6 **Agent-control interface (decided in phase 4, ADR).** Agents check their work by driving
+*our* product, never by reading or watching the target. The default: every user-visible action is a
+command in **one registry** (id, name, menu path, parameter description in our own words, enabled
+condition, run). The UI, a CLI and an agent server (for example an MCP server) dispatch by id and
+hold no behaviour of their own; a capture command renders our app or its output, offscreen where
+possible. Command ids are the catalogue's ids or names, so registering a command is the evidence
+that wires its row (R10.7). Only pure view state (zoom, panel layout) may stay in the UI. The owner
+may choose a narrower interface or none; the ADR then records the reason and what agents use
+instead to verify (R13.4). For other categories (§15): for a library the public API is the
+registry; for a CLI, the CLI; for a web app, an HTTP API plus a headless browser on our own build.
+
+R13.7 **The control channel serves our product only.** Never point it, the CLI or the agent server at
+the target or at other vendor software. At P1 that is R4.2. At P2/P3, observation follows §5, and a
+bridge to the target is a separate tool under R5.11 to R5.13, never this channel. Captures show our window or an offscreen render, never the desktop (R5.3 applies to
+our own app too), and only fixture documents built from allowed assets (R8.4).
+
+R13.8 **Control input is hostile.** Listen on loopback only, require a token, restrict file access to
+named project roots, cap request and reply sizes. Every command fails with an error, never a crash,
+on any parameters or state. A test drives every registered command with bad parameters.
 
 ---
 
@@ -492,6 +582,8 @@ R13.5 Agents acting for a contributor do not invent credits or edit anyone else'
 - [ ] Copyleft and competitor names listed as "do not read".
 - [ ] Out-of-scope list started (§12.4).
 - [ ] Corpus repository (if any) created with generator scripts and pinned hashes.
+- [ ] Feature catalogue approved; parity tracker and scorecard generated from it (R10.7).
+- [ ] Agent-control interface decided in an ADR (R13.6).
 
 ### 14.2 Before adding an asset
 
@@ -516,7 +608,9 @@ R13.5 Agents acting for a contributor do not invent credits or edit anyone else'
 - [ ] No file produced by the vendor tool, no vendor notice, no vendor wording (R3.4, R3.5).
 - [ ] Nothing from the local observation folder staged (R5.5).
 - [ ] New data/tests contain no personal data (R9.3).
-- [ ] Status/parity numbers honest and evidenced (R10.4).
+- [ ] Status/parity numbers honest and evidenced (R10.4); reports regenerated, not edited; floors
+      hold and are raised where exceeded (R10.7, R10.8).
+- [ ] New user-visible behaviour is a registry command with a bad-parameter test (R13.6, R13.8).
 - [ ] Task id in the message (R10.5).
 
 ### 14.5 If you think you violated a rule

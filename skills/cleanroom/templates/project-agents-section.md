@@ -31,8 +31,17 @@ the owner.
 | Observation notes (local, gitignored) | <<path or "none: P1">> |
 | Asset provenance index | <<path>> |
 | Decision records | <<path>> |
-| Parity / status tracker | <<path>> |
+| Feature catalogue and floors (hand-kept) | `cleanroom/parity/features.tsv`, `cleanroom/parity/floors.tsv` |
+| Parity tracker and scorecard (generated, never edited) | `cleanroom/parity/parity.md`, `cleanroom/parity/scorecard.md` |
 | Project skills (generated) | <<paths>> |
+
+### Agent control
+
+<<From the agent-control ADR: every user-visible action is a registry command whose id is the
+catalogue id; the UI, `<<cli>>` and `<<agent server>>` dispatch by id. Drive and capture our app with
+the `<<project>>-drive` skill. This channel never connects to the target.>>
+<<If a target bridge exists: it lives in `<<bridge folder>>`, is used only by the observer session,
+and is blocked here by the do-not-read list (or: implementers may call it, per ADR <<link>>).>>
 
 ### Gate
 

@@ -1,0 +1,5 @@
+# cleanroom/parity/features.tsv: the feature catalogue (template T8). Built in phase 3, approved by the owner.
+# Tab-separated. Names only (R6.3): feature, menu and command names, never descriptions or help text.
+# scope: in | out:<ADR or roadmap reference>. Status is never written here; parity_report.py derives it.
+id	area	feature	source	scope
+F-001	<<area>>	<<feature name>>	S2	in

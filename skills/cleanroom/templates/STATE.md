@@ -16,6 +16,9 @@ Updated: <<YYYY-MM-DD>>
 | Target category (rules section 15) | <<category or categories>> |
 | Existing repository | <<no / yes: baseline report path>> |
 | Posture | <<P1 / P2 / P3, ADR link>> |
+| Target bridge (P2/P3, R5.11) | <<none / owner: "quote choosing to have it built, with the attachment method", ADR link>> |
+| Agent-control interface of our product (R13.6) | <<not decided / ADR link: registry + CLI + agent server / narrower / none: reason>> |
+| Parity record | `cleanroom/parity/` (catalogue, floors, generated `parity.md` and `scorecard.md`) |
 | **Scope dial: last phase to run** | <<1 / 2 / 3 / 4 / 5 / 6>> |
 | Phase 5 limit | <<until stopped / milestone name / number of features>> |
 | Stack | <<language, build tool, UI toolkit or "none yet">> |

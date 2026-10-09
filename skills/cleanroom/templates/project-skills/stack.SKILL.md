@@ -15,6 +15,9 @@ Filled in during phase 2 and phase 4. Keep it short: only what the agent could n
 | Clean-room scan only | `<<command>>` (one of: `pwsh cleanroom/scripts/cleanroom_scan.ps1 -Root .`, `python3 cleanroom/scripts/cleanroom_scan.py --root .`, or the project's own) |
 | Scan self-test (after any change to the checks) | `<<command>> -SelfTest` / `--self-test` |
 | Run the app / CLI | `<<command>>` |
+| Agent server for our app (phase 4 ADR) | `<<command, port and token scheme, or "none">>` |
+| Capture our app (offscreen preferred) | `<<command>>` |
+| Regenerate parity reports (after the tests) | `python3 cleanroom/scripts/parity_report.py --commands <<mode>>` (gate: add `--check`) |
 | Format / lint | `<<command>>` |
 
 ## Layout
@@ -24,7 +27,9 @@ Filled in during phase 2 and phase 4. Keep it short: only what the agent could n
 ## Conventions
 
 - Commit message: `<<task id>>: <<summary>>`, one task per commit, green gate only.
-- Parallel agents: one worktree, one build directory and one scratch folder per agent; never delete
-  shared paths (R13.2).
+- Parallel agents: one worktree, one build directory, one scratch folder and one control port per
+  agent; never delete shared paths (R13.2).
+- New user-visible behaviour: a registry command in `<<registry location>>` with the catalogue id,
+  a params description in our own words, an enabled condition and a bad-parameter test (R13.6, R13.8).
 - Machine quirks: <<shell aliases, display/permissions, ports>>.
 - Error handling and safety conventions: <<project's own standard, if any>>.

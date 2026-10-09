@@ -11,11 +11,13 @@ Companion to `CLEANROOM-RULES.md`. Copy, fill in, commit alongside the work.
 
 - Date:
 - Target and version / OS:
+- Surface and state: <menu / panel / dialog / canvas / tool>; <empty document / selection / edit mode / ...>
 - Input used: synthetic, created from scratch (describe it in one line)
 - Window capture: by window id, file name(s) in screenshots/ (never committed)
 
-## Observed facts (own words)
-- ...
+## Facts (own words; each marked observed or inferred, R5.10)
+- observed: ...
+- inferred: ... (check against a dated observation before claiming exact parity)
 
 ## Open questions / not observable
 - ...
@@ -170,31 +172,112 @@ this report with Status "suspected", and ask the owner.
 ### <area>: <behaviour>
 - Source class: S1 | S2 | S3 (observation; P2/P3 only)
 - Source: <spec title + edition + section> | <URL, accessed YYYY-MM-DD> | <observation date, target version>
+- Surface and state (S3 only): <surface>; <state>; observed | inferred (R5.10)
 - Fact, own words: <what is true, in one or two sentences>
 - Decision (if undocumented): <what we implement and why>
 - Implemented in: <module / command id> ; Tested by: <test name>
 ```
 
-## T8. Parity tracker row
+## T8. Feature catalogue row (`cleanroom/parity/features.tsv`)
 
-| Id | Feature (name only) | Source class | Status | Evidence |
-|---|---|---|---|---|
-| F-001 | <feature name> | S2 | planned / partial / shipped / out of scope | <test or command id; blank unless shipped or partial> |
+The catalogue is the only hand-kept part of the parity record. The tracker (`parity.md`) and the
+scorecard (`scorecard.md`) are generated from it and from the evidence of the test run by
+`cleanroom/scripts/parity_report.py` (R10.7). Tab-separated:
 
-Rules: "shipped" needs evidence that exists (check C6). Partial counts as partial. Out of scope links an
-ADR. Status counts say whether they are measured or estimated.
+```text
+id	area	feature	source	scope
+F-001	File	Open	S2	in
+F-090	Cloud	Sync	-	out:ADR-0004
+```
+
+Rules: names only (R6.3). One row per feature the target has, including the ones we will never build
+(`out:<ADR or roadmap reference>`). The id is stable; the command id that implements a row is listed
+in the evidence, not here. Status is never written by hand: it comes from the evidence (registry
+command `wired`, acceptance tests `pass`, real inputs `pass`). Floors for areas and the total are in
+`cleanroom/parity/floors.tsv` and only rise (R10.8).
 
 ## T9. Honest assessment block (top of the roadmap)
 
+Measured rows are copied from the generated scorecard of the same commit, with its date. The last
+two rows are the only places for estimates, and they say so.
+
 ```markdown
-## Where we stand (<date>)
+## Where we stand (<date>, scorecard at <commit>)
 | Dimension | State | How measured |
 |---|---|---|
-| Features that exist | <n of m> | measured: tracker count |
-| Features that hold up on real inputs | <n of m> | measured: corpus / oracle tests, or "estimated" |
-| Fidelity to documented behaviour | <summary> | <method> |
+| Wired (a command every surface reaches) | <n of m> | measured: scorecard |
+| Live (wired, acceptance tests pass) | <n of m> | measured: scorecard |
+| Real inputs passing | <n of k files> | measured: scorecard (corpus / oracle) |
+| Controls that change nothing | <n> | measured: <audit command>, or "not measurable yet: <why>" |
+| Not measurable yet | <list with reason> | |
+| Validated by users or the owner on real work | <summary> | **estimated**: <basis> |
 | Known gaps, highest impact first | <list> | |
+
+Read the rows in order: each overstates the next. A fully wired catalogue is not parity.
 
 ## Where we are going
 1. <next highest-impact gap> ...
+```
+
+## T10. Agent-control interface decision (ADR, phase 4)
+
+Use T4 with these sections filled in. Rules R13.6 to R13.8.
+
+```markdown
+# ADR-NNNN: Agent-control interface
+
+## Decision
+- Interface: one command registry / public API (library) / the CLI (CLI tool) / HTTP API plus a
+  headless browser on our build (web) / narrower: <what> / none: <reason>
+- Registry location and command fields: <path>; id, name, menu path, params doc, enabled, run
+- Surfaces that dispatch by id: UI / CLI <command> / agent server <command, e.g. MCP over stdio>
+- UI-only state that stays outside the registry: <zoom, panel layout, ...>
+- Capture of our own app or output: <offscreen render command / window capture by id>
+- Per-agent isolation: <port or socket scheme, build dir, scratch dir> (R13.2)
+
+## How agents verify their work
+<the loop: run command by id, inspect state, capture, compare with behaviour notes; what replaces
+it if the interface is narrower or none>
+
+## Safety (R13.7, R13.8)
+- Never connected to the target or vendor software.
+- Transport: loopback / stdio; token: <how issued and stored>; file roots: <read, write>;
+  size limits: <request, reply>.
+- Bad-parameter test over every registered command: <test name>.
+
+## Evidence for the parity record
+- How the run writes `command` rows (`wired` = reachable from every surface above): <tool or test>
+- Mode for `parity_report.py --commands`: required / optional / none
+```
+
+## T11. Target bridge decision (ADR, phase 1; P2/P3 only)
+
+Use T4 with these sections filled in. Rules R5.11 to R5.13.
+
+```markdown
+# ADR-NNNN: Bridge to the target
+
+## Terms quoted
+<verbatim clauses with section numbers: automation, scripting, plug-ins / SDK, reverse engineering,
+benchmarking, competing products; or "no terms produced">
+
+## What the agent said
+<the one-sentence statement whether the terms allow this use, and the recommendation>
+
+## Owner's choice
+YYYY-MM-DD, <owner>: "<quote choosing to have the bridge built, with the attachment method>"
+
+## Bridge
+- Attachment method: documented automation interface from outside / vendor plug-in SDK (referenced
+  from <local install path>, never copied) / <other, as the owner named it>
+- Location: <own folder or repository>; never linked, bundled or shipped
+- Tools exposed and what each returns (facts only): <list>
+- Larger outputs (renders, exports) go to: <ignored observation folder>
+- Inputs: synthetic documents from <scratch folder> only; user files, account and library untouched
+- Transport and token: <stdio / loopback>; call log: <local path>
+
+## Who may call it (R5.13)
+- Observer session from <bridge folder>: yes
+- Implementing sessions in the product repository: no, blocked by `cleanroom/do-not-read.txt`
+  entries <server and tool names> / yes, by the owner's choice above
 ```

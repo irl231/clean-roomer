@@ -26,17 +26,23 @@ Profile: sections 1 and 2 (the target's name lives there, not here).
    capture at all: write the fact down instead.
    Web service: a test account the owner named, synthetic data only, no DevTools, no view-source,
    no network capture (section 15). Library: a test program against the public API only.
-3. **No OS-level synthetic input** (key or click injection). Drive the target only by hand or through
-   its documented hooks if the profile allows it.
+3. **No OS-level synthetic input** (key or click injection). Drive the target only by hand, through
+   its documented hooks if the profile allows it, or through the target bridge if STATE.md records
+   the owner's choice (R5.11): `<<bridge tools, or "no bridge">>`, used from the observer session in
+   `<<bridge folder>>`, synthetic documents from `<<scratch folder>>` only. The bridge returns facts;
+   anything larger stays in the observation folder (R5.12).
 4. **Never read anything inside the target's install**; listing names is the limit (R3.1).
 5. Stop if you meet personal data, a sign-in prompt or a destructive dialog. Close it, leave things as
    they were, tell the owner.
 
 ## Record
 
-Write a T1 note in `<<observation folder>>/` (date, target version, OS, input, facts in your own
-words, open questions). Move the *fact* into the behaviour reference as a T7 entry with source class
-S3. Screenshots stay in the observation folder and are never committed, traced or used as art.
+Write a T1 note in `<<observation folder>>/` (date, target version, OS, surface and state, input,
+facts in your own words, open questions). Mark each fact **observed** or **inferred** (R5.10); a
+fact seen in one state is not claimed for another. Move the *fact* into the behaviour reference as
+a T7 entry with source class S3. Screenshots stay in the observation folder and are never
+committed, traced or used as art. Never use the project's own control channel or `drive` skill on
+the target (R13.7).
 
 ## Done when
 

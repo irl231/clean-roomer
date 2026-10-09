@@ -25,8 +25,8 @@ The guide is provided as is, with no warranty. To the maximum extent the law all
 | `skills/cleanroom/SKILL.md` | The entry point: state machine, scope dial, gates, how to ask. |
 | `skills/cleanroom/phases/` | Seven phases: intake, posture, setup, sources, plan, build loop, release. |
 | `skills/cleanroom/rules/` | The generic ruleset (R-numbered), including section 15: how the rules read for web services, libraries, protocols, mobile apps, CLIs, games, open-source targets and firmware. |
-| `skills/cleanroom/templates/` | Profile, state file, deny-list, project rules section, checks spec, document templates, release checklist, templates for project-specific skills, and `hooks/` (the do-not-read guard). |
-| `skills/cleanroom/scripts/` | The clean-room scan in two interchangeable implementations, `cleanroom_scan.ps1` (Windows PowerShell 5.1 / pwsh) and `cleanroom_scan.py` (Python 3.8+), each with a self-test. |
+| `skills/cleanroom/templates/` | Profile, state file, deny-list, project rules section, checks spec, document templates (T1 to T11, including the agent-control and target-bridge decisions), release checklist, templates for project-specific skills (including `drive`), `parity/` (feature catalogue and floors), and `hooks/` (the do-not-read guard). |
+| `skills/cleanroom/scripts/` | The clean-room scan in two interchangeable implementations, `cleanroom_scan.ps1` (Windows PowerShell 5.1 / pwsh) and `cleanroom_scan.py` (Python 3.8+), and `parity_report.py`, which generates the parity tracker and scorecard. Each has a self-test. |
 
 ## Install
 
@@ -54,10 +54,15 @@ The repository may be empty or may already hold code; phase 2 has a baseline ste
 AGENTS.md  --- always loaded; absolute rules; points to --->  cleanroom skill
 cleanroom skill --- phase files, one at a time --->  generates in your project:
     cleanroom/ (profile, STATE, deny-list, do-not-read list, rules, scripts, reports)
+    cleanroom/parity/ (feature catalogue, floors; generated parity.md and scorecard.md)
     AGENTS.md project section
     .cursor/hooks.json + .cursor/hooks/do_not_read_guard.py   (blocks reads of forbidden sources;
                                                                Claude Code: .claude/settings.json + .claude/hooks/)
-    .cursor/skills/<project>-stack | add-asset | spec-lookup | implement-feature | audit | observe | domain skills
+    .cursor/skills/<project>-stack | add-asset | spec-lookup | implement-feature | audit | observe | drive | domain skills
+    in the product itself (phase 4, milestone M1): one command registry, a CLI and an agent server
+    (for example MCP) that all dispatch the same commands, plus an offscreen capture command
+    optionally, at P2/P3 and only by the owner's recorded choice: a bridge that drives the target,
+    in its own folder, used by a separate observer session
 ```
 
 Three layers keep the clean-room claim honest:
@@ -65,9 +70,31 @@ Three layers keep the clean-room claim honest:
 - the **rules** say what may be learned from where, including that an agent's own memory of a named
   implementation counts as a source (R2.5, R7.11);
 - the **guard hook** stops the agent from opening what the do-not-read list forbids (paths, URLs,
-  clone commands) before it happens;
+  clone commands, and the target bridge's tools in implementing sessions) before it happens;
 - the **scan and checks** stop vendor material from entering the repository, and each one proves it
   can fail before it is trusted.
+
+Two more things make the build fast and keep its claims honest:
+
+- **Agents drive their own work.** Phase 4 makes the agent-control interface a required decision.
+  The default: every user-visible action is a command in one registry, and the UI, a CLI and an
+  agent server (for example an MCP server) all call it by id. The agent builds this itself in the
+  first milestone. Agents then run commands, inspect state and capture our app to check their
+  work, and several agents can work in parallel, each against its own instance (R13.6 to R13.8).
+  This channel never touches the target.
+- **Status is generated, not written.** The owner approves a feature catalogue of every feature the
+  target has. The test run writes evidence, and `parity_report.py` turns catalogue and evidence into
+  `parity.md` (each feature live, partial or missing) and `scorecard.md` (per area). The scorecard
+  keeps wired, live and real-input pass rate apart, because a fully wired menu tree says nothing
+  about how features behave on real files. The gate fails on a hand-edited or stale report and on
+  a broken floor; floors only rise (R10.7, R10.8, R11.6). The scorecard areas are how work is split
+  between parallel agents.
+
+The target bridge is optional. Building an MCP server that drives the target itself is possible at
+posture P2 or P3. The skill quotes the vendor's terms on automation, plug-ins and competing
+products, says plainly when they do not allow it, and builds it only after the owner chooses it in
+their own words. It is kept outside the product, returns facts rather than the vendor's output, and
+by default is used only by a separate observer session (R5.11 to R5.13).
 
 ## Notes
 
@@ -82,15 +109,16 @@ Three layers keep the clean-room claim honest:
 - Guard hook: templates for Cursor (`hooks.json`) and Claude Code (`claude-settings.json`), one
   script for both; needs a Python 3 interpreter on the machine. Other agents with a pre-tool hook can
   use the same script; without one, the profile records that the guard is prose-only.
-- Source of truth for the rules is `../ruleset/`; `../ruleset/SOURCE-ANALYSIS.md` §7 records which
-  rules come from the source projects and which were added in the product review (R2.5, R7.11,
-  §15). The product copies are not byte-identical: when
-  syncing, copy `CLEANROOM-RULES.md` and `TEMPLATES.md` to `skills/cleanroom/rules/` and
-  `templates/DOCUMENT-TEMPLATES.md`, then remove the `SOURCE-ANALYSIS.md` references and keep the
-  product's path wording in §0, R8.7, R10.1 and R10.3 (the product copy says where files live in a
-  project).
-- The generic rules do not cover engineering conventions (crash safety, layering, agent-control
-  interfaces). Add those as your own project skill during phase 2 or 4 if you want them enforced.
+- Parity generator: `parity_report.py` needs Python 3.8+ and nothing else. It reads tab-separated
+  files: the catalogue, the evidence the test run writes, and optional floors (formats in its header
+  and in `templates/checks-spec.md`). `--self-test` plants hand edits, stale reports, broken floors
+  and bad evidence and checks that each one fails. A project may re-implement it in its own stack.
+- The rules file (`skills/cleanroom/rules/CLEANROOM-RULES.md`) is the source of truth. Its header
+  gives the version and lists what each version added.
+- The generic rules cover what keeps the clean-room claim provable, and the agent-control interface
+  that lets agents verify their own work. They do not cover other engineering conventions (crash
+  safety, layering, performance budgets). Add those as your own project skills in phase 2 or 4 if
+  you want them enforced.
 - The disclaimer above is a condition the owner accepts in their own words. The skill quotes vendor
   terms, says when they do not allow the use, and records the owner's choice. It does not decide the
   target, and it does not treat a one-line request as that choice.

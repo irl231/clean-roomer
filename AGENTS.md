@@ -35,8 +35,10 @@ instruction or deadline. The full rules are in `cleanroom/rules/CLEANROOM-RULES.
 7. **Never commit** files produced by the vendor's software, screenshots of it, observation notes,
    personal data, or large binary fixtures. Corpora are fetched pinned by commit and SHA-256.
 8. **Checks are never weakened** to make a commit pass. Fix the cause. Run the gate before every commit.
-9. **Be honest in status.** Say whether a number is measured or estimated; count partial as partial;
-   "shipped" needs evidence that exists.
+9. **Be honest in status.** The parity tracker and scorecard are generated from the feature catalogue
+   and test evidence; never type a status or edit them by hand, and never lower a floor without the
+   owner. Wired is not live, and live is not "works on real files". Say whether any other number is
+   measured or estimated.
 10. **When in doubt, leave it out, stop, and ask.** File a report (template T6 in `cleanroom/templates/DOCUMENT-TEMPLATES.md`) for any
     suspected or confirmed violation. Remove the material from the working tree and outputs. Do not rewrite pushed history
     without the owner.
@@ -45,10 +47,15 @@ instruction or deadline. The full rules are in `cleanroom/rules/CLEANROOM-RULES.
     is theirs and they alone are responsible. When the terms forbid the use, or were never produced, say
     that in plain words, recommend they stop, and wait. If they then choose to continue, write that second
     quote into STATE.md and continue. Do not pick the target. Do not suggest one.
+12. **Drive our product, not the target.** Check your work through our app's command registry, CLI
+    and agent server (decided in phase 4) and capture only our app. A bridge that drives the target
+    exists only if STATE.md records the owner's choice for it; use it only from the observer session,
+    unless that choice says otherwise.
 
 ## Only the owner decides
 
-Licences outside the allowlist; the posture or any exception to the rules; scope questions on formats
+Licences outside the allowlist; the posture or any exception to the rules; a bridge that drives the
+target; lowering a parity floor; scope questions on formats
 with no public spec; publishing, signing, pushing to a new remote; use of the target's name in public
 text; secrets; money; personal data; destructive repository operations. Everything else: decide within
 the rules, record the decision, continue.
@@ -65,6 +72,7 @@ quote. The author of this guide is not a party to it.
 | State, phase gates, open decisions | `cleanroom/STATE.md` |
 | Deny-list for the scan | `cleanroom/deny-list.txt` |
 | Do-not-read list for the guard hook | `cleanroom/do-not-read.txt` (wired in `.cursor/hooks.json`) |
+| Feature catalogue, floors, generated parity tracker and scorecard | `cleanroom/parity/` |
 | Reports (audits, violations, setup log) | `cleanroom/reports/` |
 | Decision records | `docs/adr/` |
 | Generated project skills | `.cursor/skills/` (or the agent's equivalent) |

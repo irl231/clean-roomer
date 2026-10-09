@@ -25,7 +25,10 @@ choice in profile section 8. If it has no hook mechanism, record "guard: not ava
 2. Generate `cleanroom/do-not-read.txt` from profile section 4 (do-not-read list: project names and
    their repository URLs) and section 2 (install paths of the target and other vendor tools).
    Keep entries specific enough to avoid blocking the project's own files; the hook matches
-   substrings of paths, URLs and commands, not file contents.
+   substrings of paths, URLs and commands, not file contents. If the owner chose a target bridge
+   (R5.11), also add its MCP server name and tool names, so sessions in the product repository
+   cannot call it (R5.13); the observer session runs from the bridge's own folder, which does not
+   carry this list. Skip this only if the bridge ADR lets implementers call it.
 3. Install the files for the agent in use (table above). Prove it bites in the real agent: ask it to
    read a path from the list and confirm the denial; then read an allowed file and confirm it passes.
    Log both in `cleanroom/reports/setup-log.md`.

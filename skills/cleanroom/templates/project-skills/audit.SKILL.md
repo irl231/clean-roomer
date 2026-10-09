@@ -23,13 +23,22 @@ Rules: `cleanroom/rules/CLEANROOM-RULES.md` sections 8 to 11. Checks spec: `clea
    per policy. Sample 10 records and open the sources.
 5. **Dependencies:** licences on the allowlist, including transitive ones; any copyleft or unknown
    licence is a finding.
-6. **Claims:** tracker entries marked shipped have evidence that exists and passes; counts say
-   measured or estimated; partial features are partial (R10.4).
-7. **Docs and wording:** no vendor wording beyond feature and menu names; no vendor logos; naming of
+6. **Claims:** `parity_report.py --check` passes on a fresh test run with the pinned corpora and
+   oracles present; floors hold and none was lowered without an ADR; the roadmap's T9 block quotes
+   the scorecard of a recent commit and labels every estimate (R10.7, R10.8). Sample five live rows
+   and drive them with the `drive` skill: a live row whose command does nothing visible or useful is
+   a finding. Count controls that change nothing.
+7. **Control channel (R13.6 to R13.8):** loopback or stdio only, token required, file roots set,
+   the bad-parameter test covers every registered command, and nothing in the configuration points
+   at the target. If a target bridge exists (R5.11 to R5.13): it is outside the product build, its
+   call log shows only synthetic inputs, nothing it returned is tracked, and its names are still in
+   `cleanroom/do-not-read.txt` (unless the ADR lets implementers call it).
+8. **Docs and wording:** no vendor wording beyond feature and menu names; no vendor logos; naming of
    the target in README or marketing is an **owner decision** (trademark): list every place it occurs.
-8. **Observation hygiene (P2/P3):** nothing tracked under the observation folder; `git log` shows no
+   Translations are written from our own text, not taken from vendor localisation (R6.6).
+9. **Observation hygiene (P2/P3):** nothing tracked under the observation folder; `git log` shows no
    such files in history.
-9. **Report:** write `cleanroom/reports/YYYY-MM-DD-audit.md` with findings (blocking, major, minor),
+10. **Report:** write `cleanroom/reports/YYYY-MM-DD-audit.md` with findings (blocking, major, minor),
    evidence, and what the owner must decide.
 
 ## Stop conditions

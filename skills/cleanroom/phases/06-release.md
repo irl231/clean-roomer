@@ -15,7 +15,9 @@
    them for the owner. **Naming and trademark use is the owner's decision**; the agent proposes
    neutral, factual wording and flags anything that implies affiliation.
 6. Prepare version, changelog, release notes (honest: known limitations next to features), tag. Do
-   not push, sign, notarise, submit or publish.
+   not push, sign, notarise, submit or publish. Any parity figure in the notes quotes the generated
+   scorecard of the release commit and names the dimension (wired, live, real inputs); "validated by
+   users" is labelled as an estimate (R10.7).
 7. Present the filled checklist and the report to the owner.
 
 ## Exit gate

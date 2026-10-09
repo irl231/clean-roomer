@@ -22,7 +22,11 @@ owner's recorded choice.
 - What you already remember is a source too: do not write from recall of a named implementation;
   derive from the spec entry in front of you (R2.5, R7.11).
 - The posture (P1/P2/P3) is the owner's. With none recorded it is **P1**: the vendor's software is
-  never run (R4).
+  never run (R4). A bridge that drives the target (for example an MCP server) is built only at P2/P3,
+  after its terms are quoted and the owner chooses it in their own words (R5.11 to R5.13).
+- Status is generated from the catalogue and test evidence, never typed; floors only rise (R10.7, R10.8).
+- Agents verify by driving **our** app through one command registry, CLI and agent server, decided
+  in phase 4; that channel never touches the target (R13.6 to R13.8).
 - When in doubt, leave it out, stop, and ask (R8.6). File a report (`templates/DOCUMENT-TEMPLATES.md` T6).
 - Checks are never weakened to pass (R11). Gate green before every commit.
 - Do not implement until STATE.md holds the owner's quote accepting `DISCLAIMER.md`. If the quoted
@@ -47,10 +51,10 @@ owner's recorded choice.
 | # | File | Result | Gate approved by owner |
 |---|---|---|---|
 | 0 | `phases/00-intake.md` | goals, stack, scope dial, STATE.md | summary confirmed |
-| 1 | `phases/01-posture.md` | posture P1/P2/P3, ADR-0001 | ADR approved |
-| 2 | `phases/02-setup.md` | profile, project rules, deny-list, checks, **project skills** | setup reviewed |
-| 3 | `phases/03-sources.md` | spec inventory, feature catalogue, out-of-scope list | sources approved |
-| 4 | `phases/04-plan.md` | architecture ADR, milestones, honest baseline | plan approved |
+| 1 | `phases/01-posture.md` | posture P1/P2/P3, ADR-0001, target bridge choice (P2/P3) | ADR approved |
+| 2 | `phases/02-setup.md` | profile, project rules, deny-list, checks, target bridge if chosen, **project skills** | setup reviewed |
+| 3 | `phases/03-sources.md` | spec inventory, feature catalogue, first generated scorecard, out-of-scope list | sources approved |
+| 4 | `phases/04-plan.md` | architecture ADR, **agent-control ADR**, parity record wired into the gate, milestones (M1 builds the control path), honest baseline | plan approved |
 | 5 | `phases/05-build.md` | features built with provenance and evidence | limit reached / owner stops |
 | 6 | `phases/06-release.md` | audited release candidate and checklist | owner signs off |
 
@@ -82,7 +86,7 @@ consequence. Do not ask what you can find out from files, the profile or the doc
 
 Phase 2 (and later phases) generate skills and files for this project from `templates/project-skills/`
 and `templates/`: `stack`, `add-asset`, `spec-lookup`, `implement-feature`, `audit`, `observe` (P2/P3
-only), plus domain skills you propose and the owner approves. Fill the placeholders from the profile,
+only), `drive` (phase 4, after the agent-control ADR), plus domain skills you propose and the owner approves. Fill the placeholders from the profile,
 install them where the agent in use finds skills (`.cursor/skills/`, or `.claude/skills/`), and list
 them in STATE.md. Vendor and target names live in the profile, STATE.md, ADRs and the deny-list only;
 generated skills say "the target" and point to the profile. The deny-list carries both names as
@@ -100,8 +104,12 @@ anything the owner must decide (rules section 12.3). Do not rewrite pushed histo
 - `rules/CLEANROOM-RULES.md`: the generic rules (R-numbers are cited everywhere).
 - `phases/`: the seven phase instructions.
 - `templates/`: profile, STATE.md, deny-list, project rules section, checks spec, document templates
-  (T1 to T9), release checklist, `project-skills/`, and `hooks/` (the do-not-read guard).
+  (T1 to T11), release checklist, `project-skills/`, `parity/` (catalogue and floors), and `hooks/`
+  (the do-not-read guard).
 - `scripts/cleanroom_scan.ps1` and `scripts/cleanroom_scan.py`: the clean-room scan, two
   interchangeable implementations (PowerShell 5.1 / pwsh, Python 3.8+) with the same deny-list format,
   output and exit codes. `-SelfTest` / `--self-test` proves each can fail, in a plain folder and in a
   git repository. A project may also re-implement the scan in its own stack.
+- `scripts/parity_report.py`: generates `parity.md` and `scorecard.md` from the catalogue, the test
+  run's evidence and the floors; `--check` in the gate; `--self-test` proves it fails on hand edits,
+  stale reports, broken floors and bad evidence. Python 3.8+, no dependencies.

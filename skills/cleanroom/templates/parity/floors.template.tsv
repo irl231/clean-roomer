@@ -1,0 +1,5 @@
+# cleanroom/parity/floors.tsv: measured minimums the gate enforces (R10.8). Tab-separated.
+# area: a catalogue area, or * for the total. live: live features. real_pass: real inputs passing. '-' = no floor.
+# Raise a floor in the commit that exceeds it. Lowering one needs the owner and an ADR.
+area	live	real_pass
+*	0	-

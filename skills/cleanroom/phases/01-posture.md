@@ -51,6 +51,22 @@ that a licence allows the project. See step 5.
    owner, or device and emulator), the local observation folder, and how the target's window or
    screen will be captured. Add the rules in `project-skills/observe.SKILL.md` to the generated
    skills. If P3, also decide the corpus repository and its generator folder.
+   **Target bridge (R5.11).** Then ask whether the owner wants an agent-facing bridge to the target,
+   for example an MCP server that drives it so an observer agent can list menus, run actions on
+   synthetic documents and report facts. Before the question, quote the clauses from step 4 on
+   automation, scripting, plug-ins or SDKs, reverse engineering, benchmarking and competing
+   products (ask for the automation or SDK terms if they are separate). If they do not allow this
+   use, or none were produced, say so in one sentence and recommend not building it. Name the
+   attachment methods and what each touches: the documented automation interface, driven from
+   outside the target; the vendor's plug-in SDK, whose files sit inside the install under their own
+   licence; anything else the owner names. Then ask:
+   - **No bridge.** (Recommended) Observation stays manual under rules section 5.
+   - **Build the bridge.** I have read what you quoted. I choose to have it built, with
+     <attachment method>, and I alone am responsible.
+   As in step 5, "ok" is not the second option; wait for their sentence. Record it in the
+   target-bridge row of STATE.md and in an ADR from template T11, including whether implementing
+   sessions may call it (R5.13). Do not refuse after they have chosen. The bridge is built in
+   phase 2.
 8. **Write ADR-0001** from the decision-record template: context, quoted clauses, options, decision,
    conditions and limits, how it is proven (checks C2 and C7 in `templates/checks-spec.md`).
 9. **Existing tainted material** from phase 0 question 6: decide per item whether to delete, isolate
